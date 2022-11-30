@@ -5,10 +5,19 @@
 
 Public API Used: https://www.thecocktaildb.com/api.php
 
- ## Deliverables: 
+## Requirements:
 
->•	source code (ZIP).
+> - Maybe the app show allow a search capability (e.g. input a city to see the weather forecast for the city), or sorting, or maybe a calculation of some sort (e.g. real-time currency conversion), depending on the topic chosen. Include validation on inputs.
 
->•	Short report (2/3 pages) containing a short description of system, screen shots, URI for deployed app, description of testing performed, code quality/metrics, Github repo URI.
+> - Keep the UI clean and simple. Pay attention to code quality and metrics. Use Github to version control your project. Have regular commits to Github, no branching is required.
 
->•	5 – 10 minute video demo where you walk through the running application.
+> - Host the application on Azure or any public cloud or hosting service of your choice. 
+
+
+## Deliverables: 
+
+> -	source code (ZIP).
+
+> -	Short report (2/3 pages) containing a short description of system, screen shots, URI for deployed app, description of testing performed, code quality/metrics, Github repo URI.
+
+> -	5 – 10 minute video demo where you walk through the running application.
