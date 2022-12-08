@@ -1,0 +1,50 @@
+﻿@page "/"
+@using CA3.Cocktails
+@inject ICocktailService CocktailService
+
+<PageTitle>Index</PageTitle>
+
+<h1>Hello, world!</h1>
+
+Welcome to your new app.
+
+<div>  
+    @if(Cocktails == null)
+    {
+        <p>loading news</p>
+    }
+    else
+    {
+        <div class="row"></div>
+        @foreach (var item in Cocktails)
+        {
+            <div class="col-4">
+                <div class="card">
+                    <div class="card-body">
+                        <p class="card-title">@item.strDrink</p>
+                    </div>
+
+                </div>
+            </div>
+        }
+    }
+</div>
+
+@if(!string.IsNullOrEmpty(Error))
+{
+    <p>Error</p>
+}
+
+@code{
+    public List<CocktailsItem> Cocktails { get; set; }
+    public string Error { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        try{
+            Cocktails = await CocktailService.GetCocktails();
+        }
+        catch(Exception e){
+            Error = e.Message;
+        }
+    }
+}
