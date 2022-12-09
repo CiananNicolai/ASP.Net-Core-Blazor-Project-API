@@ -6,16 +6,15 @@ namespace CA3.Cocktails
     public class CocktailService : ICocktailService
     {
         public readonly HttpClient _httpClient;
-        const string _baseURL = "https://cocktails3.p.rapidapi.com/random";
-        const string _cocktailEndpoint = "https://cocktails3.p.rapidapi.com/random";
-        const string _host = "cocktails3.p.rapidapi.com";
-        const string _key = "8d979503c9msh74b4763f3240ec0p179098jsn4386c9b93bdb";
+        const string _baseURL = "https://www.thecocktaildb.com/api/json/v1/1/random.php";
+        const string _cocktailEndpoint = "https://www.thecocktaildb.com/api/json/v1/1/random.php";
+        const string _host = "thecocktaildb.com";
+        const string _key = "1";
 
         public CocktailService(HttpClient httpClient) => _httpClient = httpClient;
 
         public async Task<List<CocktailsItem>> GetCocktails()
         {
-            ConfigureHttpClient();
 
             var response = await _httpClient.GetAsync(_cocktailEndpoint);
             response.EnsureSuccessStatusCode();
