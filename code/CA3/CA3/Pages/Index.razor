@@ -1,43 +1,53 @@
-﻿@page "/"
+﻿
+@page "/"
+@using CA3.Cocktails
+@inject ICocktailService CocktailService
 
-@using Newtonsoft.Json
+<PageTitle>Index</PageTitle>
 
-@inject HttpClient Http
+<h1>Hello, world!</h1>
 
-<h1>JSON List</h1>
+Welcome to your new app.
 
-@if (jsonData != null)
-{
-    <ul>
-        @foreach (var item in jsonData.value)
+<div>
+    @if (Cocktails == null)
+    {
+        <p>loading news</p>
+    }
+    else
+    {
+        <div class="row"></div>
+        @foreach (var item in Cocktails)
         {
-            @item
+            <div class="col-4">
+                <div class="card">
+                    <div class="card-body">
+                        <p class="card-title">@item.name</p>
+                    </div>
+
+                </div>
+            </div>
         }
-    </ul>
+    }
+</div>
+
+@if (!string.IsNullOrEmpty(Error))
+{
+    <p>Error</p>
 }
 
 @code {
-    private ApiResponse jsonData;
-
+    public List<CocktailsItem> Cocktails { get; set; } = new List<CocktailsItem>();
+    public string Error { get; set; }
     protected override async Task OnInitializedAsync()
     {
-        // Make a HTTP GET request to the specified URL
-        var response = await Http.GetAsync("https//www.thecocktaildb.com/api/json/v1");
-
-        // Read the response as a JSON object
-        jsonData = await response.Content.ReadAsAsync<ApiResponse>();
-    }
-
-
-    // API response model
-    public class ApiResponse
-    {
-        public object[] categories { get; set; }
-        public string created_at { get; set; }
-        public string icon_url { get; set; }
-        public string id { get; set; }
-        public string updated_at { get; set; }
-        public string url { get; set; }
-        public string value { get; set; }
+        try
+        {
+            Cocktails = await CocktailService.GetCocktails();
+        }
+        catch (Exception e)
+        {
+            Error = e.Message;
+        }
     }
 }

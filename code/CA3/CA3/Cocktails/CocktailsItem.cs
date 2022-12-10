@@ -4,6 +4,7 @@ namespace CA3.Cocktails
 {
     public class CocktailsItem
     {
-        public MarkupString strDrink { get; set; }
+        public string id { get; set; }
+        public string name { get; set; }
     }
 }

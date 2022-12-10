@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Newtonsoft.Json;
 using System.Text.Json;
 
 namespace CA3.Cocktails
@@ -6,25 +7,26 @@ namespace CA3.Cocktails
     public class CocktailService : ICocktailService
     {
         public readonly HttpClient _httpClient;
-        const string _baseURL = "https://www.thecocktaildb.com/api/json/v1/1/random.php";
-        const string _cocktailEndpoint = "https://www.thecocktaildb.com/api/json/v1/1/random.php";
-        const string _host = "thecocktaildb.com";
-        const string _key = "1";
+        const string _baseURL = "https://the-cocktail-db.p.rapidapi.com/random.php";
+        const string _cocktailEndpoint = "/random";
+        const string _host = "the-cocktail-db.p.rapidapi.com";
+        const string _key = "8d979503c9msh74b4763f3240ec0p179098jsn4386c9b93bdb";
 
         public CocktailService(HttpClient httpClient) => _httpClient = httpClient;
 
         public async Task<List<CocktailsItem>> GetCocktails()
         {
 
-            var response = await _httpClient.GetAsync(_cocktailEndpoint);
+            var response = await _httpClient.GetAsync(_baseURL + _cocktailEndpoint);
             response.EnsureSuccessStatusCode();
 
-            using var stream = await response.Content.ReadAsStreamAsync();
-            var dto = await JsonSerializer.DeserializeAsync<CocktailDto>(stream);
-            Console.WriteLine(dto);
-            return dto.body.Select(n => new CocktailsItem
+            var stream = await response.Content.ReadAsStringAsync();
+
+            var dto = System.Text.Json.JsonSerializer.Deserialize<List<CocktailDto>>(stream);
+            return dto.Select(n => new CocktailsItem
             {
-                strDrink =(MarkupString)n.name
+                id = n.idDrink,
+                name = n.strDrink
             }).ToList();
         }
         public void ConfigureHttpClient()
