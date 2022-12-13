@@ -3,29 +3,29 @@
 @using Newtonsoft.Json
 
 @inject HttpClient Http
-
 <h1>JSON List</h1>
 
 @if (jsonData != null)
 {
-    <ul>
-        @foreach (var item in jsonData.value)
-        {
-            @item
-        }
+<ul>
+@foreach (var item in jsonData)
+{
+    <li>@item.icon_url </li>
+    }
     </ul>
 }
 
 @code {
-    private ApiResponse jsonData;
+    private List<ApiResponse> jsonData;
 
     protected override async Task OnInitializedAsync()
     {
         // Make a HTTP GET request to the specified URL
-        var response = await Http.GetAsync("https//www.thecocktaildb.com/api/json/v1");
+        var response = await Http.GetAsync("https://api.chucknorris.io/jokes/random");
 
         // Read the response as a JSON object
-        jsonData = await response.Content.ReadAsAsync<ApiResponse>();
+        jsonData = JsonConvert.DeserializeObject<List<ApiResponse>>(await response.Content.ReadAsStringAsync());
+
     }
 
 
