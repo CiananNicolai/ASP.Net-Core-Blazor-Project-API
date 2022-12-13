@@ -1,33 +1,45 @@
 ﻿@page "/"
-
 @using Newtonsoft.Json
-
 @inject HttpClient Http
-<h1>JSON List</h1>
 
+<PageTitle>Chuck Norris Fact Generator</PageTitle>
+
+<h1>Random Chuck Norris Facts!</h1>
+<p>"Chuck Norris facts are satirical factoids about American martial artist and actor Chuck Norris that have become an Internet phenomenon 
+    widespread in popular culture. These 'facts' are absurd hyperbolic claims about Norris's toughness, attitude, sophistication, and masculinity. "
+    </p>
 @if (jsonData != null)
 {
-<ul>
-@foreach (var item in jsonData)
-{
-    <li>@item.icon_url </li>
-    }
+    <ul>
+        @foreach (var item in jsonData.value)
+        {
+            @item
+        }
+        @foreach (var item in jsonData.created_at)
+        {
+            @item
+        }
     </ul>
+}
+else
+{
+    <p>No data returned.</p>
 }
 
 @code {
-    private List<ApiResponse> jsonData;
+    private ApiResponse jsonData;
 
     protected override async Task OnInitializedAsync()
     {
+        // Initialize the list as an empty list
+        jsonData = new ApiResponse();
+
         // Make a HTTP GET request to the specified URL
         var response = await Http.GetAsync("https://api.chucknorris.io/jokes/random");
 
         // Read the response as a JSON object
-        jsonData = JsonConvert.DeserializeObject<List<ApiResponse>>(await response.Content.ReadAsStringAsync());
-
+        jsonData = JsonConvert.DeserializeObject<ApiResponse>(await response.Content.ReadAsStringAsync());
     }
-
 
     // API response model
     public class ApiResponse

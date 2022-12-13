@@ -1,18 +1,56 @@
 ﻿@page "/counter"
+@using Newtonsoft.Json
+@inject HttpClient Http
 
 <PageTitle>Counter</PageTitle>
 
-<h1>Counter</h1>
+<h1>Search Jokes</h1>
 
-<p role="status">Current count: @currentCount</p>
 
-<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+<input type="text" placeholder="Enter search query" @bind="query" />
+<button @onclick="Search">Search</button>
+
+<p role="result">
+    <ul>
+        @foreach (var joke in jsonSearch.value)
+        {
+           @joke
+        }
+    </ul>
+</p>
+
 
 @code {
-    private int currentCount = 0;
 
-    private void IncrementCount()
+    private string query;
+    private ApiResponseSearch jsonSearch;
+
+
+    protected override async Task OnInitializedAsync()
     {
-        currentCount++;
+        // Initialize the list as an empty list
+        jsonSearch = new ApiResponseSearch();
+    }
+
+    private async Task Search()
+    {
+        // Make a HTTP GET request to the specified URL
+        var response = await Http.GetAsync($"https://api.chucknorris.io/jokes/search?query={query}");
+
+        // Read the response as a JSON object
+        jsonSearch = JsonConvert.DeserializeObject<ApiResponseSearch>(await response.Content.ReadAsStringAsync());
+    }
+
+
+    // API response model
+    public class ApiResponseSearch
+    {
+        public object[] categories { get; set; }
+        public string created_at { get; set; }
+        public string icon_url { get; set; }
+        public string id { get; set; }
+        public string updated_at { get; set; }
+        public string url { get; set; }
+        public string value { get; set; }
     }
 }
