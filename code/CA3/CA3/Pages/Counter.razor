@@ -1,8 +1,9 @@
 ﻿@page "/counter"
 @using Newtonsoft.Json
+@using System.Text.RegularExpressions
 @inject HttpClient Http
 
-<PageTitle>Counter</PageTitle>
+<PageTitle>Chuck Norris Fact Search</PageTitle>
 
 <h1>Search Jokes</h1>
 
@@ -39,7 +40,7 @@ else
 
     private async Task Search()
     {
-        @if (System.Text.RegularExpressions.Regex.IsMatch(query, "^[a-zA-Z]*$"))
+        if (Regex.IsMatch(query, @"^[a-zA-Z]+$"))
         {
             // Make a HTTP GET request to the specified URL
             var response = await Http.GetAsync($"https://api.chucknorris.io/jokes/search?query={query}");
@@ -49,7 +50,13 @@ else
 
             Console.WriteLine(jsonSearch);
         }
+        else
+        {
+            // Show an error message to the user
+            Console.WriteLine("Please enter a valid search query!");
+        }
     }
+
 
 
     // API response model

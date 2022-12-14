@@ -3,28 +3,45 @@
 @inject HttpClient Http
 
 <PageTitle>Chuck Norris Fact Generator</PageTitle>
-
-<h1>Random Chuck Norris Facts!</h1>
-<p>"Chuck Norris facts are satirical factoids about American martial artist and actor Chuck Norris that have become an Internet phenomenon 
-    widespread in popular culture. These 'facts' are absurd hyperbolic claims about Norris's toughness, attitude, sophistication, and masculinity. "
-    </p>
-@if (jsonData != null)
-{
-    <ul>
-        @foreach (var item in jsonData.value)
+<div class="d-flex justify-content-center">
+    <div class="col-6 align-self-center">
+    <h1>Random Chuck Norris Facts!</h1>
+    <p>"Chuck Norris facts are satirical factoids about American martial artist and actor Chuck Norris that have become an Internet phenomenon 
+        widespread in popular culture. These 'facts' are absurd hyperbolic claims about Norris's toughness, attitude, sophistication, and masculinity."
+        </p>
+        <div class="d-flex justify-content-center">
+        @if (jsonData != null)
         {
-            @item
-        } <br>
-        @foreach (var item in jsonData.created_at)
-        {
-            @item
+            <BSCard CardType="CardType.Card" style="width: 18rem;">
+                <BSCard CardType="CardType.Body">
+                    <BSCard CardType="CardType.Title">Your random fact!</BSCard>
+                    <BSCard CardType="CardType.Text">
+                        <blockquote class="blockquote">
+                            <p class="mb-0">
+                                  @foreach (var item in jsonData.value)
+                                    {
+                                    @item
+                                    }
+                            </p>
+                        </blockquote>
+                    </BSCard>
+                    <BSButton Color="BSColor.Primary">
+                    <p>Created:</p>
+                        @foreach (var item in jsonData.created_at)
+                        {
+                            @item
+                        }
+                    </BSButton>
+                </BSCard>
+            </BSCard>
         }
-    </ul>
-}
-else
-{
-    <p>No data returned.</p>
-}
+        else
+        {
+            <p>No data returned.</p>
+        }
+        </div>
+    </div>
+</div>
 
 @code {
     private ApiResponse jsonData;
