@@ -10,14 +10,19 @@
 <input type="text" placeholder="Enter search query" @bind="query" />
 <button @onclick="Search">Search</button>
 
-<p role="result">
-    <ul>
-        @foreach (var joke in jsonSearch.value)
+@if (jsonSearch != null)
+{
+        <ul>
+        @foreach (var item in jsonSearch.value)
         {
-           @joke
+            @item
         }
     </ul>
-</p>
+}
+else
+{
+    <p>No value found!</p>
+}
 
 
 @code {
@@ -34,18 +39,23 @@
 
     private async Task Search()
     {
-        // Make a HTTP GET request to the specified URL
-        var response = await Http.GetAsync($"https://api.chucknorris.io/jokes/search?query={query}");
+        @if (System.Text.RegularExpressions.Regex.IsMatch(query, "^[a-zA-Z]*$"))
+        {
+            // Make a HTTP GET request to the specified URL
+            var response = await Http.GetAsync($"https://api.chucknorris.io/jokes/search?query={query}");
 
-        // Read the response as a JSON object
-        jsonSearch = JsonConvert.DeserializeObject<ApiResponseSearch>(await response.Content.ReadAsStringAsync());
+            // Read the response as a JSON object
+            jsonSearch = JsonConvert.DeserializeObject<ApiResponseSearch>(await response.Content.ReadAsStringAsync());
+
+            Console.WriteLine(jsonSearch);
+        }
     }
 
 
     // API response model
     public class ApiResponseSearch
     {
-        public object[] categories { get; set; }
+        public List<string> categories { get; set; }
         public string created_at { get; set; }
         public string icon_url { get; set; }
         public string id { get; set; }
@@ -53,4 +63,6 @@
         public string url { get; set; }
         public string value { get; set; }
     }
+
+
 }
