@@ -1,75 +1,36 @@
 ﻿@page "/counter"
+@using System.Net.Http
 @using Newtonsoft.Json
-@using System.Text.RegularExpressions
+
 @inject HttpClient Http
 
 <PageTitle>Chuck Norris Fact Search</PageTitle>
 
-<h1>Search Jokes</h1>
+<h1>Search Facts</h1>
 
 
-<input type="text" placeholder="Enter search query" @bind="query" />
-<button @onclick="Search">Search</button>
 
-@if (jsonSearch != null)
-{
-        <ul>
-        @foreach (var item in jsonSearch.value)
-        {
-            @item
-        }
-    </ul>
-}
-else
-{
-    <p>No value found!</p>
-}
+<form onsubmit="@Search">
+    <label for="query">Enter search query:</label>
+    <input id="query" type="text" @oninput="HandleInput" />
+    <button type="submit">Search</button>
+</form>
 
+<pre>
+    @response
+</pre>
 
 @code {
+    string query = "";
+    string response = "";
 
-    private string query;
-    private ApiResponseSearch jsonSearch;
-
-
-    protected override async Task OnInitializedAsync()
+    async Task Search()
     {
-        // Initialize the list as an empty list
-        jsonSearch = new ApiResponseSearch();
+        response = await Http.GetStringAsync($"https://api.chucknorris.io/jokes/search?query={query}");
     }
 
-    private async Task Search()
+    void HandleInput(ChangeEventArgs e)
     {
-        if (Regex.IsMatch(query, @"^[a-zA-Z]+$"))
-        {
-            // Make a HTTP GET request to the specified URL
-            var response = await Http.GetAsync($"https://api.chucknorris.io/jokes/search?query={query}");
-
-            // Read the response as a JSON object
-            jsonSearch = JsonConvert.DeserializeObject<ApiResponseSearch>(await response.Content.ReadAsStringAsync());
-
-            Console.WriteLine(jsonSearch);
-        }
-        else
-        {
-            // Show an error message to the user
-            Console.WriteLine("Please enter a valid search query!");
-        }
+        query = e.Value.ToString();
     }
-
-
-
-    // API response model
-    public class ApiResponseSearch
-    {
-        public List<string> categories { get; set; }
-        public string created_at { get; set; }
-        public string icon_url { get; set; }
-        public string id { get; set; }
-        public string updated_at { get; set; }
-        public string url { get; set; }
-        public string value { get; set; }
-    }
-
-
 }
